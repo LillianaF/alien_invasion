@@ -61,6 +61,8 @@ class AlienInvasion:
         '''Respond to keypresses and mouse events.'''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                # with open('high_score', 'w') as file_object:
+                # file_object.write(str(self.sb.check_high_scores()))
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
@@ -80,6 +82,8 @@ class AlienInvasion:
         self.stats.reset_stats()
         self.stats.game_active = True
         self.sb.prep_score()
+        self.sb.prep_level()
+        self.sb.prep_ships()
 
         # Get rid of any remaining aliens and bullets.
         self.aliens.empty()
@@ -164,6 +168,10 @@ class AlienInvasion:
             self._create_fleet()
             self.settings.increase_speed()
 
+            # Increase level.
+            self.stats.level += 1
+            self.sb.prep_level()
+
     def _update_aliens(self):
         '''Check if the fleet is at an edge, then update the positions of all aliens in the fleet.'''
         self._check_fleet_edges()
@@ -188,8 +196,9 @@ class AlienInvasion:
     def _ship_hit(self):
         '''Respond to the ship being hit by an alien.'''
         if self.stats.ships_left > 0:
-            # Decrement ships left.
+            # Decrement ships left, and update scoreboard.
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
 
             # Get rid of any remaining aliens and bullets.
             self.aliens.empty()
