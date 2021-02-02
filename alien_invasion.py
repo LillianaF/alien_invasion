@@ -10,6 +10,8 @@ from alien import Alien
 from game_stats import GameStats
 from scoreboard import Scoreboard
 from button import Button
+
+import sound_effects as se
 # Make the aliens come down at a random position each time
 # How to disable the p keydown button when the game is active
 # Make difficulty levels with three sets of buttons (14-4)
@@ -135,6 +137,7 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+            se.bullet_sound.play()
 
     def _update_bullets(self):
         '''Update position of bullets and get rid of old bullets.'''
@@ -161,6 +164,7 @@ class AlienInvasion:
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_scores()
+            se.collision_sound.play()
 
         if not self.aliens:
             # Destroy existing bullets and create new fleet.
